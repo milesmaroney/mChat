@@ -3,6 +3,8 @@ import React from 'react';
 import ColorPicker from './ColorPicker';
 import Settings from './Settings';
 import useClickOutside from './useClickOutside';
+import socketIO from 'socket.io-client';
+import { v4 as uuidv4 } from 'uuid';
 
 function ChatBar(props) {
   const [message, setMessage] = React.useState('');
@@ -33,16 +35,26 @@ function ChatBar(props) {
 
   function handleSubmit() {
     if (message && user) {
-      props.setMessages((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          username: user,
-          color: props.color,
-          timestamp: moment().format('h:mm'),
-          message: message,
-        },
-      ]);
+      const socket = socketIO('http://localhost:3001', {
+        withCredentials: true,
+      });
+      socket.emit('message', {
+        id: uuidv4(),
+        username: user,
+        color: props.color,
+        timestamp: moment().format(),
+        message: message,
+      });
+      // props.setMessages((prev) => [
+      //   ...prev,
+      //   {
+      //     id: prev.length + 1,
+      //     username: user,
+      //     color: props.color,
+      //     timestamp: moment().format('h:mm'),
+      //     message: message,
+      //   },
+      // ]);
       setMessage('');
     }
   }
@@ -71,14 +83,14 @@ function ChatBar(props) {
         />
       </div>
       <div className='flex w-full gap-2 items-center'>
-        User:
+        Chat As:
         <input
           autoComplete='off'
           value={user}
           onChange={(e) => setUser(e.target.value)}
           placeholder='Enter a Username'
           className='focus:bg-black focus:ring focus:ring-violet-600 rounded-sm indent-1 w-60'
-          style={inputStyle}
+          style={{ ...inputStyle, fontWeight: 'bold', color: props.color }}
         />
         <ColorPicker
           color={props.color}

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 
 function Feed(props) {
@@ -24,13 +25,14 @@ function Feed(props) {
 
   const feedMessages = props.messages.map((m) => (
     <div
-      // className='flex'
       key={m.id}
       style={{
         color: props.darkMode ? 'rgb(175, 175, 175)' : 'rgb(125, 125, 125)',
       }}
     >
-      {props.showTimestamp && <span className='pr-2'>{m.timestamp}</span>}
+      {props.showTimestamp && (
+        <span className='pr-2'>{moment(m.timestamp).format('h:mm')}</span>
+      )}
       <span
         style={{
           color: m.color,
@@ -44,7 +46,11 @@ function Feed(props) {
       </span>{' '}
     </div>
   ));
-  return <div className='flex flex-col h-full mt-4 gap-1'>{feedMessages}</div>;
+  return (
+    <div className='flex flex-col h-full mt-4 gap-1'>
+      {feedMessages.length ? feedMessages : 'Quiet in here...'}
+    </div>
+  );
 }
 
 export default Feed;

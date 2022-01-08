@@ -2,6 +2,7 @@ import React from 'react';
 import ChatBar from './ChatBar';
 import Feed from './Feed';
 import sampleMessages from './sampleData';
+import socketIO from 'socket.io-client';
 
 function App() {
   const [darkMode, setDarkMode] = React.useState(
@@ -15,7 +16,18 @@ function App() {
     () => JSON.parse(localStorage.getItem('mChatTimestamp')) || false
   );
 
-  const [messages, setMessages] = React.useState(sampleMessages);
+  const [messages, setMessages] = React.useState([]);
+  React.useEffect(() => {
+    const socket = socketIO('http://localhost:3001', {
+      withCredentials: true,
+    });
+    // socket.on('message', (data) => console.log(data));
+    socket.on('message', (data) => {
+      setMessages((prev) => [...prev, data]);
+    });
+
+    return () => socket.disconnect();
+  }, []);
 
   React.useEffect(() => {
     localStorage.setItem('mChatUserColor', JSON.stringify(color));
