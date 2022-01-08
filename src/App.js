@@ -2,6 +2,7 @@ import React from 'react';
 import ChatBar from './ChatBar';
 import Feed from './Feed';
 import socketIO from 'socket.io-client';
+import Options from './config';
 
 function App() {
   const [darkMode, setDarkMode] = React.useState(
@@ -16,9 +17,10 @@ function App() {
   );
 
   const [messages, setMessages] = React.useState([]);
+  console.log(Options.host);
 
   React.useEffect(() => {
-    const socket = socketIO('localhost:3001', {
+    const socket = socketIO(`${Options.host}:3001`, {
       withCredentials: true,
       reconnection: true,
       reconnectionDelay: 5000,

@@ -5,6 +5,7 @@ import Settings from './Settings';
 import useClickOutside from './useClickOutside';
 import socketIO from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
+import Options from './config';
 
 function ChatBar(props) {
   const [message, setMessage] = React.useState('');
@@ -35,7 +36,7 @@ function ChatBar(props) {
 
   function handleSubmit() {
     if (message && user) {
-      const socket = socketIO('localhost:3001', {
+      const socket = socketIO(`${Options.host}:3001`, {
         withCredentials: true,
       });
       socket.emit('message', {
