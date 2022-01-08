@@ -62,7 +62,7 @@ const Feed = React.forwardRef((props, ref) => {
   function checkScroll(e) {
     if (
       e.target.scrollHeight - e.target.scrollTop >=
-      e.target.clientHeight + 75
+      e.target.clientHeight + 100
     ) {
       props.setAutoscroll(false);
     } else {

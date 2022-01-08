@@ -32,10 +32,6 @@ function App() {
       reconnectionDelay: 5000,
       reconnectionDelayMax: 5000,
     });
-    socket.on('connect', (data) => console.log('Connected to mChat!'));
-    socket.on('disconnect', () =>
-      console.log('Disconnected, Attempting to reconnect in 5 seconds...')
-    );
     socket.on('connect_error', () =>
       console.log('Couldnt Connect, Attempting to reconnect in 5 seconds...')
     );
@@ -47,7 +43,18 @@ function App() {
     });
 
     return () => socket.disconnect();
-  }, []);
+  }, [autoscroll]);
+
+  function smoothScroll() {
+    if (autoscroll) {
+      let lastMessage = feedRef.current?.lastElementChild;
+      lastMessage?.scrollIntoView({
+        block: 'end',
+        inline: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }
 
   React.useEffect(() => {
     localStorage.setItem('mChatUserColor', JSON.stringify(color));
@@ -61,17 +68,6 @@ function App() {
   React.useEffect(() => {
     localStorage.setItem('mChatColorblind', JSON.stringify(colorblind));
   }, [colorblind]);
-
-  function smoothScroll() {
-    if (autoscroll) {
-      let lastMessage = feedRef.current?.lastElementChild;
-      lastMessage?.scrollIntoView({
-        block: 'end',
-        inline: 'nearest',
-        behavior: 'smooth',
-      });
-    }
-  }
 
   function snapScroll() {
     let lastMessage = feedRef.current?.lastElementChild;
