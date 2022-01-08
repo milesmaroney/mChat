@@ -1,7 +1,8 @@
 import moment from 'moment';
 import React from 'react';
+import { flushSync } from 'react-dom';
 
-function Feed(props) {
+const Feed = React.forwardRef((props, ref) => {
   function emojify(message) {
     let split = message.split('LUL');
     let output = [];
@@ -52,11 +53,50 @@ function Feed(props) {
       </div>
     );
   });
+
+  function handleClick() {
+    props.snapScroll();
+    props.setAutoscroll(true);
+  }
+
+  function checkScroll(e) {
+    if (
+      e.target.scrollHeight - e.target.scrollTop >=
+      e.target.clientHeight + 75
+    ) {
+      props.setAutoscroll(false);
+    } else {
+      props.setAutoscroll(true);
+    }
+  }
+
   return (
-    <div className='flex flex-col h-full mt-4 gap-1'>
-      {feedMessages.length ? feedMessages : 'Quiet in here...'}
-    </div>
+    <>
+      <div
+        className='flex flex-col h-full gap-1 overflow-y-auto'
+        ref={ref}
+        onScroll={checkScroll}
+      >
+        {feedMessages.length ? feedMessages : 'Welcome to the chat room!'}
+      </div>
+      <div
+        className='absolute bottom-4 right-1/2 translate-x-1/2 transition-opacity duration-300 py-1 px-4 rounded-md cursor-pointer'
+        onClick={handleClick}
+        style={{
+          opacity: props.autoscroll ? '0' : '1',
+          backgroundColor: props.darkMode
+            ? 'rgba(25, 25, 25, .9)'
+            : 'rgba(225, 225, 225, .9)',
+          border: `1px solid ${
+            props.darkMode ? 'rgb(50, 50, 50)' : 'rgb(200, 200, 200)'
+          }`,
+          fontWeight: 'bold',
+        }}
+      >
+        Auto Scroll Paused
+      </div>
+    </>
   );
-}
+});
 
 export default Feed;

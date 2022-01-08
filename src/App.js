@@ -1,8 +1,10 @@
 import React from 'react';
+import { flushSync } from 'react-dom';
 import ChatBar from './ChatBar';
 import Feed from './Feed';
 import socketIO from 'socket.io-client';
 import Options from './config';
+import Logo from './assets/mChat.png';
 
 function App() {
   const [darkMode, setDarkMode] = React.useState(
@@ -19,7 +21,9 @@ function App() {
     () => JSON.parse(localStorage.getItem('mChatColorblind')) || false
   );
 
+  const [autoscroll, setAutoscroll] = React.useState(true);
   const [messages, setMessages] = React.useState([]);
+  const feedRef = React.useRef();
 
   React.useEffect(() => {
     const socket = socketIO(`${Options.host}:3001`, {
@@ -36,7 +40,10 @@ function App() {
       console.log('Couldnt Connect, Attempting to reconnect in 5 seconds...')
     );
     socket.on('message', (data) => {
-      setMessages((prev) => [...prev, data]);
+      flushSync(() => {
+        setMessages((prev) => [...prev, data]);
+      });
+      smoothScroll();
     });
 
     return () => socket.disconnect();
@@ -55,6 +62,25 @@ function App() {
     localStorage.setItem('mChatColorblind', JSON.stringify(colorblind));
   }, [colorblind]);
 
+  function smoothScroll() {
+    if (autoscroll) {
+      let lastMessage = feedRef.current?.lastElementChild;
+      lastMessage?.scrollIntoView({
+        block: 'end',
+        inline: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }
+
+  function snapScroll() {
+    let lastMessage = feedRef.current?.lastElementChild;
+    lastMessage?.scrollIntoView({
+      block: 'end',
+      inline: 'nearest',
+    });
+  }
+
   return (
     <div
       className='flex flex-col h-screen w-screen p-8 pb-6 transition-colors duration-300 border-r border-black'
@@ -64,18 +90,25 @@ function App() {
       }}
     >
       <div className='flex items-center'>
-        <div className='text-xl font-bold mr-auto'>mChat</div>
+        <div className='mr-auto'>
+          <img src={Logo} alt='Logo' className='h-8' />
+        </div>
         <div onClick={() => setDarkMode(!darkMode)}>
           <input type='checkbox' className='mr-2' readOnly checked={darkMode} />
           <span className='cursor-pointer'>Dark Mode</span>
         </div>
       </div>
-      <div className='grow'>
+      <div className='grow my-4 overflow-y-auto relative'>
         <Feed
           messages={messages}
           showTimestamp={showTimestamp}
           colorblind={colorblind}
           darkMode={darkMode}
+          autoscroll={autoscroll}
+          setAutoscroll={setAutoscroll}
+          ref={feedRef}
+          smoothScroll={smoothScroll}
+          snapScroll={snapScroll}
         />
       </div>
       <div className=''>
