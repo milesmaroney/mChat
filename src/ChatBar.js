@@ -91,6 +91,7 @@ function ChatBar(props) {
           placeholder='Enter a Username'
           className='focus:bg-black focus:ring focus:ring-violet-600 rounded-sm indent-1 w-60'
           style={{ ...inputStyle, fontWeight: 'bold', color: props.color }}
+          maxLength={25}
         />
         <ColorPicker
           color={props.color}
