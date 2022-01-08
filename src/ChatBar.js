@@ -91,13 +91,22 @@ function ChatBar(props) {
           onChange={(e) => setUser(e.target.value)}
           placeholder='Enter a Username'
           className='focus:bg-black focus:ring focus:ring-violet-600 rounded-sm indent-1 w-60'
-          style={{ ...inputStyle, fontWeight: 'bold', color: props.color }}
+          style={{
+            ...inputStyle,
+            fontWeight: 'bold',
+            color: props.colorblind
+              ? props.darkMode
+                ? 'rgb(255, 255, 255'
+                : 'rgb(0, 0, 0)'
+              : props.color,
+          }}
           maxLength={25}
         />
         <ColorPicker
           color={props.color}
           setColor={props.setColor}
           darkMode={props.darkMode}
+          colorblind={props.colorblind}
         />
         <div
           className='ml-auto mr-2 relative cursor-pointer'
@@ -109,6 +118,8 @@ function ChatBar(props) {
               <Settings
                 setShowTimestamp={props.setShowTimestamp}
                 showTimestamp={props.showTimestamp}
+                colorblind={props.colorblind}
+                setColorblind={props.setColorblind}
               />
             </div>
           )}

@@ -15,6 +15,9 @@ function App() {
   const [showTimestamp, setShowTimestamp] = React.useState(
     () => JSON.parse(localStorage.getItem('mChatTimestamp')) || false
   );
+  const [colorblind, setColorblind] = React.useState(
+    () => JSON.parse(localStorage.getItem('mChatColorblind')) || false
+  );
 
   const [messages, setMessages] = React.useState([]);
 
@@ -48,6 +51,9 @@ function App() {
   React.useEffect(() => {
     localStorage.setItem('mChatTimestamp', JSON.stringify(showTimestamp));
   }, [showTimestamp]);
+  React.useEffect(() => {
+    localStorage.setItem('mChatColorblind', JSON.stringify(colorblind));
+  }, [colorblind]);
 
   return (
     <div
@@ -68,6 +74,7 @@ function App() {
         <Feed
           messages={messages}
           showTimestamp={showTimestamp}
+          colorblind={colorblind}
           darkMode={darkMode}
         />
       </div>
@@ -78,6 +85,8 @@ function App() {
           setMessages={setMessages}
           showTimestamp={showTimestamp}
           setShowTimestamp={setShowTimestamp}
+          colorblind={colorblind}
+          setColorblind={setColorblind}
           darkMode={darkMode}
         />
       </div>

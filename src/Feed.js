@@ -23,29 +23,35 @@ function Feed(props) {
     return output;
   }
 
-  const feedMessages = props.messages.map((m) => (
-    <div
-      key={m.id}
-      style={{
-        color: props.darkMode ? 'rgb(175, 175, 175)' : 'rgb(125, 125, 125)',
-      }}
-    >
-      {props.showTimestamp && (
-        <span className='pr-2'>{moment(m.timestamp).format('h:mm')}</span>
-      )}
-      <span
+  const feedMessages = props.messages.map((m) => {
+    return (
+      <div
+        key={m.id}
         style={{
-          color: m.color,
-          fontWeight: 'bold',
+          color: props.darkMode ? 'rgb(175, 175, 175)' : 'rgb(125, 125, 125)',
         }}
       >
-        {m.username}
-      </span>
-      <span style={{ color: props.darkMode ? 'white' : 'black' }}>
-        : {emojify(m.message)}
-      </span>{' '}
-    </div>
-  ));
+        {props.showTimestamp && (
+          <span className='pr-2'>{moment(m.timestamp).format('h:mm')}</span>
+        )}
+        <span
+          style={{
+            color: props.colorblind
+              ? props.darkMode
+                ? 'rgb(255, 255, 255'
+                : 'rgb(0, 0, 0)'
+              : m.color,
+            fontWeight: 'bold',
+          }}
+        >
+          {m.username}
+        </span>
+        <span style={{ color: props.darkMode ? 'white' : 'black' }}>
+          : {emojify(m.message)}
+        </span>{' '}
+      </div>
+    );
+  });
   return (
     <div className='flex flex-col h-full mt-4 gap-1'>
       {feedMessages.length ? feedMessages : 'Quiet in here...'}
