@@ -17,7 +17,6 @@ function App() {
   );
 
   const [messages, setMessages] = React.useState([]);
-  console.log(Options.host);
 
   React.useEffect(() => {
     const socket = socketIO(`${Options.host}:3001`, {

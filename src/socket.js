@@ -3,17 +3,14 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
+const Options = require('./config');
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: `${Options.host}:3000`,
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
-
-// app.get('/', (req, res) => {
-//   res.sendFile(__dirname + '/index.html');
-// });
 
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -35,5 +32,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(3001, () => {
-  console.log('listening on *:3001');
+  console.log(`listening on ${Options.host}:3001`);
 });
