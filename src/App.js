@@ -18,7 +18,7 @@ function App() {
   const [messages, setMessages] = React.useState([]);
 
   React.useEffect(() => {
-    const socket = socketIO('http://localhost:3001', {
+    const socket = socketIO('localhost:3001', {
       withCredentials: true,
       reconnection: true,
       reconnectionDelay: 5000,

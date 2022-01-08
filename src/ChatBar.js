@@ -35,7 +35,7 @@ function ChatBar(props) {
 
   function handleSubmit() {
     if (message && user) {
-      const socket = socketIO('http://localhost:3001', {
+      const socket = socketIO('localhost:3001', {
         withCredentials: true,
       });
       socket.emit('message', {
