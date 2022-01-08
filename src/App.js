@@ -1,7 +1,6 @@
 import React from 'react';
 import ChatBar from './ChatBar';
 import Feed from './Feed';
-import sampleMessages from './sampleData';
 import socketIO from 'socket.io-client';
 
 function App() {
@@ -17,11 +16,21 @@ function App() {
   );
 
   const [messages, setMessages] = React.useState([]);
+
   React.useEffect(() => {
     const socket = socketIO('http://localhost:3001', {
       withCredentials: true,
+      reconnection: true,
+      reconnectionDelay: 5000,
+      reconnectionDelayMax: 5000,
     });
-    // socket.on('message', (data) => console.log(data));
+    socket.on('connect', (data) => console.log('Connected to mChat!'));
+    socket.on('disconnect', () =>
+      console.log('Disconnected, Attempting to reconnect in 5 seconds...')
+    );
+    socket.on('connect_error', () =>
+      console.log('Couldnt Connect, Attempting to reconnect in 5 seconds...')
+    );
     socket.on('message', (data) => {
       setMessages((prev) => [...prev, data]);
     });
