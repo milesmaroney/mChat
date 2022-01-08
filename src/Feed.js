@@ -9,7 +9,13 @@ function Feed(props) {
       output.push(fragment);
       if (i > 0) {
         output.push(
-          <img src='/LUL.png' alt='LUL' key={i} className='inline' />
+          <img
+            src='/emotes/LUL.png'
+            style={{ width: '1.2rem' }}
+            alt='LUL'
+            key={i}
+            className='inline mx-1'
+          />
         );
       }
     }
