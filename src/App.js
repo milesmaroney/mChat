@@ -7,28 +7,31 @@ import Options from './config';
 import Logo from './assets/mChat.png';
 import useClickOutside from './useClickOutside';
 import Login from './Login';
+import axios from 'axios';
 
 function App() {
-  const [darkMode, setDarkMode] = React.useState(
-    () => JSON.parse(localStorage.getItem('mChatTheme')) || false
-  );
-  const [color, setColor] = React.useState(
-    () =>
-      JSON.parse(localStorage.getItem('mChatUserColor')) || 'rgb(255, 255, 255)'
-  );
-  const [showTimestamp, setShowTimestamp] = React.useState(
-    () => JSON.parse(localStorage.getItem('mChatTimestamp')) || false
-  );
-  const [colorblind, setColorblind] = React.useState(
-    () => JSON.parse(localStorage.getItem('mChatColorblind')) || false
+  const [user, setUser] = React.useState(
+    () => JSON.parse(localStorage.getItem('mChatUser')) || {}
   );
 
-  const [user, setUser] = React.useState({});
+  const [darkMode, setDarkMode] = React.useState(user.darkMode);
+  const [color, setColor] = React.useState(user.color);
+  const [showTimestamp, setShowTimestamp] = React.useState(user.showTimestamps);
+  const [colorblind, setColorblind] = React.useState(user.colorblind);
+
   const [messages, setMessages] = React.useState([]);
   const [autoscroll, setAutoscroll] = React.useState(true);
   const [showUserSettings, setShowUserSettings] = React.useState(false);
   const feedRef = React.useRef();
   const userSettings = React.useRef();
+
+  React.useEffect(() => {
+    localStorage.setItem('mChatUser', JSON.stringify(user));
+    setDarkMode(user.darkMode);
+    setColor(user.color);
+    setColorblind(user.colorblind);
+    setShowTimestamp(user.showTimestamps);
+  }, [user]);
 
   React.useEffect(() => {
     setShowUserSettings(false);
@@ -63,17 +66,18 @@ function App() {
   }
 
   React.useEffect(() => {
-    localStorage.setItem('mChatUserColor', JSON.stringify(color));
-  }, [color]);
-  React.useEffect(() => {
-    localStorage.setItem('mChatTheme', JSON.stringify(darkMode));
-  }, [darkMode]);
-  React.useEffect(() => {
-    localStorage.setItem('mChatTimestamp', JSON.stringify(showTimestamp));
-  }, [showTimestamp]);
-  React.useEffect(() => {
-    localStorage.setItem('mChatColorblind', JSON.stringify(colorblind));
-  }, [colorblind]);
+    if (user.username) {
+      axios
+        .put(`${Options.host}:3002/preferences`, {
+          username: user.username,
+          color: color,
+          darkMode: darkMode,
+          colorblind: colorblind,
+          showTimestamps: showTimestamp,
+        })
+        .then((res) => setUser(res.data));
+    }
+  }, [color, darkMode, showTimestamp, colorblind]);
 
   function snapScroll() {
     let lastMessage = feedRef.current?.lastElementChild;
@@ -84,6 +88,7 @@ function App() {
   }
 
   function handleLogout() {
+    localStorage.removeItem('mChatUser');
     setUser({});
     setShowUserSettings(false);
   }

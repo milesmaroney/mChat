@@ -29,7 +29,7 @@ function Login(props) {
           username: newUsername,
           password: newPassword,
         })
-        .then((res) => console.log(res))
+        .then((res) => props.setUser(res.data))
         .catch((err) => alert('User Exists Already'));
     } else {
       alert('Passwords Dont Match');
@@ -46,11 +46,13 @@ function Login(props) {
   return (
     <div
       className=' w-screen h-screen flex flex-col justify-evenly items-center text-white'
-      style={{ backgroundColor: 'rgb(25, 25, 25)' }}
+      style={{
+        backgroundColor: 'rgb(25, 25, 25)',
+      }}
     >
       <img src={Logo} alt='Logo' style={{ width: '20vw' }} />
       <div className='flex flex-col w-1/3'>
-        <div className='text-center text-2xl'>Login</div>
+        <div className='text-center text-2xl uppercase font-light'>Login</div>
         username{' '}
         <input
           className=' mb-4 border rounded-lg focus:bg-black focus:ring focus:ring-violet-600'
@@ -72,7 +74,7 @@ function Login(props) {
         </button>
       </div>
       <div className='flex flex-col w-1/3'>
-        <div className='text-center text-2xl'>Sign Up</div>
+        <div className='text-center text-2xl uppercase font-light'>Sign Up</div>
         username{' '}
         <input
           className=' mb-4 border rounded-lg focus:bg-black focus:ring focus:ring-violet-600'

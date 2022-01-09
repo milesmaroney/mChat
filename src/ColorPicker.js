@@ -1,10 +1,12 @@
 import React from 'react';
 import { RgbStringColorPicker } from 'react-colorful';
 import useClickOutside from './useClickOutside';
+import useDebouncy from 'use-debouncy/lib/effect';
 
 export default function ColorPicker(props) {
   const [showPicker, setShowPicker] = React.useState(false);
   const [showError, setShowError] = React.useState(false);
+  const [value, setValue] = React.useState(props.color);
   const popover = React.useRef();
 
   useClickOutside(popover, () => setShowPicker(false));
@@ -13,6 +15,8 @@ export default function ColorPicker(props) {
       setShowPicker(true);
     }
   }
+
+  useDebouncy(() => props.setColor(value), 200, [value]);
 
   function handleMouseOver() {
     if (props.colorblind) {
@@ -47,7 +51,7 @@ export default function ColorPicker(props) {
           className='absolute bottom-0 left-7 border rounded-lg border-black'
           ref={popover}
         >
-          <RgbStringColorPicker color={props.color} onChange={props.setColor} />
+          <RgbStringColorPicker color={value} onChange={setValue} />
         </div>
       )}
     </div>
