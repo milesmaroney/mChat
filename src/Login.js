@@ -19,7 +19,8 @@ function Login(props) {
         } else {
           alert('Incorrect Credentials');
         }
-      });
+      })
+      .catch((err) => alert('No account with that username found'));
   }
 
   function handleSignUpSubmit() {
