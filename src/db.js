@@ -4,16 +4,12 @@ const SALT_WORK_FACTOR = 10;
 mongoose.Promise = global.Promise;
 const Options = require('./config');
 
-mongoose.connect(
-  `mongodb://${Options.mongo}/mChat`,
-  { useNewUrlParser: true },
-  (err) => {
-    if (err) {
-      throw err;
-    }
-    console.log('DB Connected');
+mongoose.connect(`${Options.mongo}`, { useNewUrlParser: true }, (err) => {
+  if (err) {
+    throw err;
   }
-);
+  console.log('DB Connected');
+});
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
