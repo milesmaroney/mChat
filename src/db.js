@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
 mongoose.Promise = global.Promise;
+const Options = require('./config');
 
 mongoose.connect(
-  'mongodb://localhost/mChat',
+  `mongodb://${Options.mongo}/mChat`,
   { useNewUrlParser: true },
   (err) => {
     if (err) {
