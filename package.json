@@ -6,9 +6,12 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.24.0",
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "moment": "^2.29.1",
+    "mongoose": "^6.1.5",
     "react": "^17.0.2",
     "react-colorful": "^5.5.1",
     "react-dom": "^17.0.2",
@@ -23,7 +26,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "socket": "node src/socket.js"
+    "socket": "node src/socket.js",
+    "server": "node src/server.js"
   },
   "eslintConfig": {
     "extends": [

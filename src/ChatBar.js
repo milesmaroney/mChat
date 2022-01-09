@@ -9,7 +9,6 @@ import Options from './config';
 
 function ChatBar(props) {
   const [message, setMessage] = React.useState('');
-  const [user, setUser] = React.useState('');
   const [showSettings, setShowSettings] = React.useState(false);
 
   const settings = React.useRef();
@@ -35,27 +34,17 @@ function ChatBar(props) {
   }
 
   function handleSubmit() {
-    if (message && user) {
+    if (message && props.user.username) {
       const socket = socketIO(`${Options.host}:3001`, {
         withCredentials: true,
       });
       socket.emit('message', {
         id: uuidv4(),
-        username: user,
+        username: props.user.username,
         color: props.color,
         timestamp: moment().format(),
         message: message,
       });
-      // props.setMessages((prev) => [
-      //   ...prev,
-      //   {
-      //     id: prev.length + 1,
-      //     username: user,
-      //     color: props.color,
-      //     timestamp: moment().format('h:mm'),
-      //     message: message,
-      //   },
-      // ]);
       setMessage('');
     }
   }
@@ -84,15 +73,10 @@ function ChatBar(props) {
         />
       </div>
       <div className='flex w-full gap-2 items-center'>
-        Chat As:
-        <input
-          autoComplete='off'
-          value={user}
-          onChange={(e) => setUser(e.target.value)}
-          placeholder='Enter a Username'
-          className='focus:bg-black focus:ring focus:ring-violet-600 rounded-sm indent-1 w-60'
+        Preview:
+        <div
+          className='cursor-default'
           style={{
-            ...inputStyle,
             fontWeight: 'bold',
             color: props.colorblind
               ? props.darkMode
@@ -100,8 +84,9 @@ function ChatBar(props) {
                 : 'rgb(0, 0, 0)'
               : props.color,
           }}
-          maxLength={25}
-        />
+        >
+          {props.user.username}
+        </div>
         <ColorPicker
           color={props.color}
           setColor={props.setColor}
@@ -120,6 +105,8 @@ function ChatBar(props) {
                 showTimestamp={props.showTimestamp}
                 colorblind={props.colorblind}
                 setColorblind={props.setColorblind}
+                darkMode={props.darkMode}
+                setDarkMode={props.setDarkMode}
               />
             </div>
           )}
@@ -127,7 +114,7 @@ function ChatBar(props) {
         <button
           className='bg-violet-600 rounded-md px-3 py-1 font-bold text-white'
           onClick={handleSubmit}
-          disabled={!message || !user}
+          disabled={!message}
         >
           Chat
         </button>

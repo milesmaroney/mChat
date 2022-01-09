@@ -1,6 +1,5 @@
 import moment from 'moment';
 import React from 'react';
-import { flushSync } from 'react-dom';
 
 const Feed = React.forwardRef((props, ref) => {
   function emojify(message) {
