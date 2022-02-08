@@ -11,7 +11,6 @@ const demoData = {
     'engineer37',
     'UNUMspokesperson',
     'theBoys',
-    'xDGuild',
     'chikfila',
   ],
   colors: [
